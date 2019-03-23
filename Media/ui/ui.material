@@ -1,0 +1,39 @@
+material UI/char1
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				anim_texture smn.png 2 2
+				filtering none
+			}
+		}
+	}
+}
+
+material UI/char2
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				anim_texture yc.png 2 2
+				filtering none
+			}
+		}
+	}
+}

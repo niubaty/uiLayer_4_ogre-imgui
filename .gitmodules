@@ -1,0 +1,3 @@
+[submodule "ogre-imgui"]
+	path = ogre-imgui
+	url = https://github.com/OGRECave/ogre-imgui.git
