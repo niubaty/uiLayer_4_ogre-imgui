@@ -121,8 +121,9 @@ void uiLayer::updateWindow(float dt) {
 		//disable all UIpic
 		//add this setAllUPicsUnvisble() here may set unvisalbe every frame and it's acceptable because it's near to the end
 		setAllUIPicsUnVisble();
-		cur_title = std::string(u8"over");
-		cur_content = std::string(u8"完毕");
+		//cur_title = std::string(u8" ");
+		//cur_content = std::string(u8" ");
+		conversationEnd = true;
 	}
 	//std::cout << cur_title << " " << cur_content << std::endl;
 	__ShowCustomWindow(cur_title, cur_content, 0);
@@ -130,12 +131,12 @@ void uiLayer::updateWindow(float dt) {
 	mTrigger = false;
 }
 
-void uiLayer::setUIPic(std::string &id) {
+void uiLayer::setUIPic(std::string id) {
 	//切记uiLayer是需要配套资源的
 	if (mTrigger) {
 		//disable all UIpic
 		setAllUIPicsUnVisble();
-		if (!mSceneMgr->hasSceneNode(Ogre::String(u8"uipicent") + Ogre::String(id))) {
+		if (!mSceneMgr->hasSceneNode(Ogre::String(u8"uipicnd") + Ogre::String(id))) {
 			Ogre::Entity *ent = mSceneMgr->createEntity(Ogre::String(u8"uipicent") + Ogre::String(id), Ogre::SceneManager::PT_PLANE);
 			std::map<Ogre::String, Ogre::Camera*> cams = mSceneMgr->getCameras();
 			std::map<Ogre::String, Ogre::Camera*>::iterator it = cams.begin();
@@ -172,19 +173,19 @@ void uiLayer::setUIpicPositionSet_default() {
 }
 
 
-void uiLayer::setUIpicPositionSet(std::string &id,Ogre::Vector3 &pos,Ogre::Vector3 &scale) {
+void uiLayer::setUIpicPositionSet(std::string id,Ogre::Vector3 &pos,Ogre::Vector3 &scale) {
 	UIpicPositionSet.at(id) = pos;
 	UIpicScaleSet.at(id) = scale;
 }
 
 
 
-void uiLayer::setCharUIPosition(std::string &id,Ogre::Vector3 &v) {
+void uiLayer::setCharUIPosition(std::string id,Ogre::Vector3 &v) {
 	Ogre::SceneNode *nd = mSceneMgr->getSceneNode(Ogre::String(u8"uipicnd") + Ogre::String(id));
 	nd->setPosition(v);
 }
 
-void uiLayer::setCharUIScale(std::string &id, Ogre::Vector3 &v) {
+void uiLayer::setCharUIScale(std::string id, Ogre::Vector3 &v) {
 	Ogre::SceneNode *nd = mSceneMgr->getSceneNode(Ogre::String(u8"uipicnd") + Ogre::String(id));
 	nd->setScale(v);
 }

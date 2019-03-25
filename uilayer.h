@@ -43,22 +43,24 @@ public:
 	//place the UI charactor position by default
 	void setUIpicPositionSet_default();
 	//place the UI charactor position by user
-	void setUIpicPositionSet(std::string&, Ogre::Vector3&,Ogre::Vector3&);
+	void setUIpicPositionSet(std::string, Ogre::Vector3&,Ogre::Vector3&);
 	//set the conversition
 	void setConversition(std::string);
 	//control the charUI position
-	void setCharUIPosition(std::string &, Ogre::Vector3 &);
+	void setCharUIPosition(std::string , Ogre::Vector3 &);
 	//control the CharUI scale
-	void setCharUIScale(std::string &, Ogre::Vector3 &);
+	void setCharUIScale(std::string , Ogre::Vector3 &);
 	//
 	Ogre::SceneManager *mSceneMgr;
+	//bool 
+	bool conversationEnd = false;
 
 
 protected:
 
 
 	void setAllUIPicsUnVisble();
-	void setUIPic(std::string &id);
+	void setUIPic(std::string id);
 
 	std::vector<std::string *>		file_contents;
 	std::vector<std::string *>::iterator		it_file_contents;
