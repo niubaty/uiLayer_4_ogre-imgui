@@ -16,6 +16,7 @@ void uiLayer::createImguiManager(OgreBites::ApplicationContextBase * app,Ogre::S
 	mSceneMgr = mgr;
 	width = app->getRenderWindow()->getWidth();
 	height = app->getRenderWindow()->getHeight();
+	InitCurContent();
 	//这里临时添加到了ogre-imgui/ImguiManager.cpp/createFontTexture 以后找到原因要改掉
 	//assert(_access("../Media/ui/fontsyouyuan.ttf", 0) != -1, "../Media/ui/fonts/youyuan.ttf not existing");
 	//ImGui::GetIO().Fonts->AddFontFromFileTTF("../Media/ui/fonts/youyuan.ttf", 13.0f, NULL, ImGui::GetIO().Fonts->GetGlyphRangesChineseSimplifiedCommon());
@@ -23,7 +24,6 @@ void uiLayer::createImguiManager(OgreBites::ApplicationContextBase * app,Ogre::S
 
 void uiLayer::setConversition(std::string path) {
 	loadFromFile(path.c_str());
-	InitCurContent();
 	setUIpicPositionSet_default();
 }
 
@@ -58,6 +58,16 @@ void uiLayer::loadFromFile(const char * path) {
 	it_file_contents = file_contents.begin();
 }
 
+void uiLayer::conversitionAddTalk(std::string id, std::string title, std::string content) {
+//[debug] this place should using new and delete in the next cursor,
+//but let's keep it this way temporary
+	customConversitionIds.push_back(id);
+	customConversitionTitles.push_back(title);
+	customConversitionContents.push_back(content);
+}
+
+
+
 void uiLayer::unload() {
 	for (std::vector<std::string *>::iterator it = file_contents.begin();it != file_contents.end();it++)
 		delete *it;
@@ -75,6 +85,25 @@ std::string* uiLayer::nextFileContents() {
 	}
 	return cur_file_contents;
 }
+
+
+void uiLayer::customConversitionNext() {
+	if (mTrigger) {
+		if (customConversitionTitles.size() == 0) {
+			conversationEnd = true;
+			return;
+		}
+		else {
+			cur_id = std::string(customConversitionIds.at(0));
+			cur_title = std::string(customConversitionTitles.at(0));
+			cur_content = std::string(customConversitionContents.at(0));
+			customConversitionIds.erase(customConversitionIds.begin());
+			customConversitionTitles.erase(customConversitionTitles.begin());
+			customConversitionContents.erase(customConversitionContents.begin());
+		}
+	}
+}
+
 
 void uiLayer::pullTrigger() {
 	mTrigger = true;
@@ -126,10 +155,35 @@ void uiLayer::updateWindow(float dt) {
 		conversationEnd = true;
 	}
 	//std::cout << cur_title << " " << cur_content << std::endl;
+	__ShowCustomWindow(cur_title, cur_content,0);
+
+	mTrigger = false;
+}
+
+
+void uiLayer::updateWindow2(float dt) {
+
+	Ogre::ImguiManager::getSingleton().newFrame(
+		dt,
+		Ogre::Rect(0, 0, width, height)
+	);
+	customConversitionNext();
+	if (!conversationEnd) {
+		setUIPic(cur_id);
+	}
+	else {
+		//disable all UIpic
+		//add this setAllUPicsUnvisble() here may set unvisalbe every frame and it's acceptable because it's near to the end
+		setAllUIPicsUnVisble();
+	}
+	//std::cout << cur_title << " " << cur_content << std::endl;
 	__ShowCustomWindow(cur_title, cur_content, 0);
 
 	mTrigger = false;
 }
+
+
+
 
 void uiLayer::setUIPic(std::string id) {
 	//切记uiLayer是需要配套资源的
@@ -173,6 +227,12 @@ void uiLayer::setUIpicPositionSet_default() {
 }
 
 
+void uiLayer::addUIpicPositionSet(std::string id,Ogre::Vector3 pos,Ogre::Vector3 scale) {
+	UIpicPositionSet.insert(std::pair<std::string, Ogre::Vector3>(id, pos));
+	UIpicScaleSet.insert(std::pair<std::string, Ogre::Vector3>(id, scale));
+}
+
+
 void uiLayer::setUIpicPositionSet(std::string id,Ogre::Vector3 &pos,Ogre::Vector3 &scale) {
 	UIpicPositionSet.at(id) = pos;
 	UIpicScaleSet.at(id) = scale;
@@ -199,7 +259,7 @@ std::string* uiLayer::cur_file_contents(NULL);
 
 
 //private methode
-void uiLayer::__ShowCustomWindow(std::string &title, std::string &content, bool* p_open)
+void uiLayer::__ShowCustomWindow(std::string &title, std::string &content,bool* p_open)
 {
 	//window size
 	static int corner = 3;
@@ -223,12 +283,12 @@ void uiLayer::__ShowCustomWindow(std::string &title, std::string &content, bool*
 	}
 	//ImGui::PushFont(atlas->Fonts[0]);
 	ImGui::PushFont(io.Fonts->Fonts[1]);
-	io.Fonts->Fonts[1]->Scale = 1;
+	io.Fonts->Fonts[1]->Scale = titleFontScale;
 	ImGui::Text("%s", title.c_str());
 	ImGui::PopFont();
 
 	ImGui::PushFont(io.Fonts->Fonts[1]);
-	io.Fonts->Fonts[1]->Scale = 1;
+	io.Fonts->Fonts[1]->Scale = ctxFontScale;
 	ImGui::TextWrapped("%s", content.c_str());
 	ImGui::PopFont();
 

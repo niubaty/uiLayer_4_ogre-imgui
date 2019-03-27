@@ -1,6 +1,7 @@
 #include <Ogre.h>
 #include <OgreApplicationContext.h>
 #include "uilayer.h"
+#include <iostream>
 
 class ImguiExample : public OgreBites::ApplicationContext, public OgreBites::InputListener
 {
@@ -14,14 +15,7 @@ public:
 	{
 		OgreBites::ApplicationContext::frameStarted(evt);
 
-		//Ogre::ImguiManager::getSingleton().newFrame(
-		//	evt.timeSinceLastFrame,
-		//	Ogre::Rect(0, 0, getRenderWindow()->getWidth(), getRenderWindow()->getHeight()));
-
-		//ImGui::ShowDemoWindow();
-		//ui.width = getRenderWindow()->getWidth();
-		//ui.height = getRenderWindow()->getHeight();
-		ui.updateWindow(evt.timeSinceLastFrame);
+		ui.updateWindow2(evt.timeSinceLastFrame);
 		return true;
 	}
 
@@ -49,7 +43,14 @@ public:
 		//Ogre::ImguiManager::getSingleton().init(scnMgr);
 		//ui = uiLayer(this,scnMgr);
 		ui = uiLayer(this, scnMgr);
-		ui.setConversition(std::string("../Media/ui/Conversition/test.txt"));
+		//ui.setConversition(std::string("../Media/ui/Conversition/test.txt"));
+		ui.conversitionAddTalk(std::string(u8"1"), std::string(u8"你好"), std::string(u8"世界"));
+		ui.conversitionAddTalk(std::string(u8"2"), std::string(u8"你好2"), std::string(u8"世界2"));
+		ui.conversitionAddTalk(std::string(u8"1"), std::string(u8"你好"), std::string(u8"世界"));
+		ui.conversitionAddTalk(std::string(u8"2"), std::string(u8"你好2"), std::string(u8"世界2"));
+		ui.conversitionAddTalk(std::string(u8"1"), std::string(u8"你好"), std::string(u8"世界"));
+		ui.addUIpicPositionSet(std::string(u8"1"), Ogre::Vector3(-10, 0, -20), Ogre::Vector3(0.02, 0.02, 0.02));
+		ui.addUIpicPositionSet(std::string(u8"2"), Ogre::Vector3(5, 0, -20), Ogre::Vector3(0.02, 0.02, 0.02));
 
 
 		// register our scene with the RTSS

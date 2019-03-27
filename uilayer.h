@@ -30,18 +30,25 @@ public:
 	void update_ShowDemoWindow(Ogre::Real);
 	// loading the conversition, must be utf-8 coding
 	void loadFromFile(const char * path);
+	// add talk to conversion
+	void conversitionAddTalk(std::string, std::string, std::string);
 	// delete all the content of conversition loading from the file
 	void unload();
 	// get next line of conversition
 	std::string* nextFileContents();
+	//
+	void customConversitionNext();
 	// set the trigger to true so we can move to next line of conversation
 	void pullTrigger();
 	// like slipt of python
 	std::vector<std::string> split(const std::string &, const std::string &);
 	void updateWindow(float);
+	void updateWindow2(float);
 	void InitCurContent();
 	//place the UI charactor position by default
 	void setUIpicPositionSet_default();
+	//
+	void addUIpicPositionSet(std::string,Ogre::Vector3,Ogre::Vector3);
 	//place the UI charactor position by user
 	void setUIpicPositionSet(std::string, Ogre::Vector3&,Ogre::Vector3&);
 	//set the conversition
@@ -73,6 +80,20 @@ protected:
 	std::string					cur_id;
 	std::string					delim;
 
+
+
+	std::vector<std::string>	customConversitionIds;
+	std::vector<std::string>	customConversitionTitles;
+	std::vector<std::string>	customConversitionContents;
+	int							customConversitionCursor = 0;
+	float						titleFontScale = 1;
+	float						ctxFontScale = 1;
+
+
+
+
+
+
 	std::vector<std::string>	UIPicsId;
 	std::map<std::string, Ogre::Vector3>	UIpicPositionSet;
 	std::map<std::string, Ogre::Vector3>::iterator	it_UIpicPositionSet;
@@ -80,5 +101,5 @@ protected:
 	std::map<std::string, Ogre::Vector3>::iterator	it_UIpicScaleSet;
 
 private:
-	void __ShowCustomWindow(std::string&, std::string&, bool*);
+	void __ShowCustomWindow(std::string&, std::string&,bool*);
 };
